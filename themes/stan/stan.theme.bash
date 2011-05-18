@@ -37,7 +37,7 @@ stan_scm_prompt() {
 
 prompt() {
     PS1="${TITLEBAR}\[${yellow}\]$(stan_rvm_version_prompt)$(stan_scm_prompt)\[${normal}\]in \[${cyan}\]\w
-\[${black}\]\!`if [[ $? = "0" ]]; then echo "\[\033[32m\]"; else echo "\[\033[31m\]"; fi`▸ \[${normal}\]"
+\[${black}\]\!\`if [[ \$? = "0" ]]; then echo "\\[\\033[32m\\]"; else echo "\\[\\033[31m\\]"; fi\`▸ \[${normal}\]"
 }
 
 PS2="↳ "
