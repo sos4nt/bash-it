@@ -14,40 +14,40 @@ source "${BASH}/themes/base.theme.bash"
 LIB="${BASH}/lib/*.bash"
 for config_file in $LIB
 do
-  source $config_file
+  if [ -e "${config_file}" ]; then
+    source $config_file
+  fi
 done
 
-# Tab Completion
-COMPLETION="${BASH}/completion/*.bash"
-for config_file in $COMPLETION
+# Load enabled aliases, completion, plugins
+for file_type in "aliases" "completion" "plugins"
 do
-  source $config_file
+  if [ ! -d "${BASH}/${file_type}/enabled" ]
+  then
+    continue 
+  fi
+  FILES="${BASH}/${file_type}/enabled/*.bash"
+  for config_file in $FILES
+  do
+    if [ -e "${config_file}" ]; then
+      source $config_file
+    fi
+  done
 done
 
-# Plugins
-if [ ! -d "${BASH}/plugins/enabled" ]
+# Load any custom aliases that the user has added
+if [ -e "${BASH}/aliases/custom.aliases.bash" ]
 then
-  mkdir "${BASH}/plugins/enabled"
-  ln -s ${BASH}/plugins/available/* "${BASH}/plugins/enabled"
+  source "${BASH}/aliases/custom.aliases.bash"
 fi
-PLUGINS="${BASH}/plugins/enabled/*.bash"
-for config_file in $PLUGINS
-do
-  source $config_file
-done
-
-# Aliases
-FUNCTIONS="${BASH}/aliases/*.bash"
-for config_file in $FUNCTIONS
-do
-  source $config_file
-done
 
 # Custom
 CUSTOM="${BASH}/custom/*.bash"
 for config_file in $CUSTOM
 do
-  source $config_file
+  if [ -e "${config_file}" ]; then
+    source $config_file
+  fi
 done
 
 
@@ -60,6 +60,13 @@ fi
 PREVIEW="less"
 [ -s /usr/bin/gloobus-preview ] && PREVIEW="gloobus-preview"
 [ -s /Applications/Preview.app ] && PREVIEW="/Applications/Preview.app"
+
+# Load all the Jekyll stuff
+
+if [ -e $HOME/.jekyllconfig ]
+then
+  . $HOME/.jekyllconfig
+fi
 
 
 #
